@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="cordova-plugin-aliyunpush"
+        version="3.2.0">
+    <name>Aliyun push</name>
+    <description>Cordova Push Plugin,use Aliyun SDK</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,aliyun,push</keywords>
+
+    <engines>
+        <engine name="cordova-android" version=">=5.0.0"/>
+    </engines>
+
+    <preference name="$APP_KEY" default=""/>
+    <preference name="$APP_SECRET" default=""/>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <!--Android 6.0版本可去除，用于选举信息（通道复用）的同步-->
+            <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+            <!--进行网络访问和网络状态监控相关的权限声明-->
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+            <!--允许对sd卡进行读写操作-->
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+            <!--网络库使用，当网络操作时需要确保事务完成不被杀掉-->
+            <uses-permission android:name="android.permission.WAKE_LOCK"/>
+            <!--用于读取手机硬件信息等，用于机型过滤-->
+            <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+            <!--选举使用，当应用有删除或者更新时需要重新选举，复用推送通道-->
+            <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED"/>
+            <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED"/>
+            <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
+            <!--补偿通道小米PUSH使用，不用可去除-->
+            <uses-permission android:name="android.permission.GET_TASKS"/>
+            <!--补偿通道GCM使用，不使用可去除-->
+            <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+            <!--允许监听启动完成事件-->
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <!--允许访问震动器-->
+            <uses-permission android:name="android.permission.VIBRATE"/>
+            <!-- 允许task重排序 -->
+            <uses-permission android:name="android.permission.REORDER_TASKS"/>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <!-- 通道保持服务 -->
+            <service android:name="com.alibaba.sdk.android.push.ChannelService"
+                     android:exported="true" android:process=":channel">
+                <intent-filter>
+                    <action android:name="com.taobao.accs.intent.action.SERVICE"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="org.agoo.android.intent.action.PING_V4"/>
+                    <category android:name="taobao"/>
+                </intent-filter>
+            </service>
+            <!-- 消息接收服务 -->
+            <service android:name="com.alibaba.sdk.android.push.MsgService"
+                     android:exported="false">
+                <intent-filter>
+                    <action android:name="com.taobao.accs.intent.action.RECEIVE"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.alibaba.sdk.android.push.NOTIFY_ACTION"/>
+                </intent-filter>
+            </service>
+            <!-- 消息接收增强服务（可提高通知/消息达到率）-->
+            <service android:name="com.alibaba.sdk.android.push.channel.TaobaoRecvService" android:exported="true">
+                <intent-filter>
+                    <action android:name="org.android.agoo.client.MessageReceiverService"/>
+                </intent-filter>
+            </service>
+            <receiver android:name="您的自定义Receiver(需继承com.alibaba.sdk.android.push.MessageReceiver)">
+                <intent-filter>
+                    <action android:name="com.alibaba.push2.action.NOTIFICATION_OPENED"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.alibaba.push2.action.NOTIFICATION_REMOVED"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.taobao.accs.intent.action.COMMAND"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.taobao.taobao.intent.action.COMMAND"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="com.alibaba.sdk.android.push.RECEIVE"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.USER_PRESENT"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                    <data android:scheme="package"/>
+                </intent-filter>
+            </receiver>
+            <meta-data android:name="com.alibaba.app.appkey" android:value="$APP_KEY "/> <!-- 请填写你自己的- appKey -->
+            <meta-data android:name="com.alibaba.app.appsecret" android:value="$APP_SECRET"/> <!-- 请填写你自己的appSecret -->
+        </config-file>
+
+        <source-file src="src/android/AliyunPush.java" target-dir="src/com/tubugs/cordova"/>
+        <source-file src="libs/armeabi/libcocklogic-1.1.3.so" target-dir="libs/armeabi"/>
+        <source-file src="libs/armeabi/libtnet-3.1.11.so" target-dir="libs/armeabi"/>
+        <source-file src="libs/armeabi-v7a/libcocklogic-1.1.3.so" target-dir="libs/armeabi-v7a"/>
+        <source-file src="libs/armeabi-v7a/libtnet-3.1.11.so" target-dir="libs/armeabi-v7a"/>
+        <source-file src="libs/arm64-v8a/libcocklogic-1.1.3.so" target-dir="libs/arm64-v8a"/>
+        <source-file src="libs/arm64-v8a/libtnet-3.1.11.so" target-dir="libs/arm64-v8a"/>
+        <source-file src="libs/x86/libcocklogic-1.1.3.so" target-dir="libs/x86"/>
+        <source-file src="libs/x86/libtnet-3.1.11.so" target-dir="libs/x86"/>
+        <source-file src="libs/x86_64/libcocklogic-1.1.3.so" target-dir="libs/x86_64"/>
+        <source-file src="libs/x86_64/libtnet-3.1.11.so" target-dir="libs/x86_64"/>
+        <source-file src="libs/alicloud-android-push-sdk-3.0.11.jar" target-dir="libs"/>
+        <source-file src="libs/alicloud-android-ut-5.1.0.jar" target-dir="libs"/>
+        <source-file src="libs/utdid4all-1.1.5.3_proguard.jar" target-dir="libs"/>
+    </platform>
+</plugin>
