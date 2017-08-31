@@ -1,24 +1,16 @@
 package com.tubugs.cordova;
 
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
-
 import android.content.Context;
-import android.telephony.TelephonyManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.util.Log;
-import com.alibaba.sdk.android.callback.InitResultCallback;
 import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 
-public class CarrierPlugin extends CordovaPlugin {
-    private static final String TAG = "CarrierPlugin";
+public class AliyunPushPlugin extends CordovaPlugin {
+    private static final String TAG = "AliyunPushPlugin";
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
