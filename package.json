@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Cordova Push Plugin,use Aliyun SDK",
   "cordova": {
-    "id": "cordova-plugin-baidumaplocation",
+    "id": "cordova-plugin-aliyunpush",
     "platforms": [
       "android"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tubugs/cordova-plugin-aliyunpush.git"
   },
   "keywords": [
     "cordova",
@@ -22,5 +26,9 @@
     }
   ],
   "author": "tubugs",
-  "license": "Apache 2.0"
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/tubugs/cordova-plugin-aliyunpush/issues"
+  },
+  "homepage": "https://github.com/tubugs/cordova-plugin-aliyunpush#readme"
 }
