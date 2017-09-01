@@ -33,6 +33,17 @@ public class MainApplication extends Application {
             public void onSuccess(String response) {
                 Log.i(TAG, "init cloudchannel success");
                 Log.i(TAG, "deviceid:" + pushService.getDeviceId());
+                pushService.bindAccount("13721061552", new CommonCallback() {
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.i(TAG, "init bindAccount success");
+                    }
+
+                    @Override
+                    public void onFailed(String s, String s1) {
+                        Log.i(TAG, "init bindAccount failed");
+                    }
+                });
             }
 
             @Override
