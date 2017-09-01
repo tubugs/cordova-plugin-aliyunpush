@@ -31,14 +31,15 @@
         <engine name="cordova-android" version=">=5.0.0"/>
     </engines>
 
-    <preference name="$APP_KEY" default=""/>
-    <preference name="$APP_SECRET" default=""/>
+    <preference name="APP_KEY" default=""/>
+    <preference name="APP_SECRET" default=""/>
 
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="AliyunPush">
+            <feature name="AliyunPushPlugin">
                 <param name="android-package" value="com.tubugs.cordova.AliyunPushPlugin"/>
+                <param name="onload" value="true" />
             </feature>
         </config-file>
 
@@ -125,8 +126,7 @@
                 </intent-filter>
             </service>
             <service android:name="com.alibaba.sdk.android.push.AliyunPushIntentService"
-                     android:exported="true"
-            >
+                     android:exported="true">
                 <intent-filter>
                     <action android:name="org.agoo.android.intent.action.RECEIVE" />
                 </intent-filter>
@@ -172,8 +172,7 @@
                     android:finishOnTaskLaunch="false"
                     android:launchMode="singleInstance"
                     android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-                    android:process=":channel"
-            >
+                    android:process=":channel">
             </activity>
             <!-- 消息接收监听器 （用户可自主扩展） -->
             <receiver
@@ -189,7 +188,7 @@
                     <action android:name="com.alibaba.sdk.android.push.RECEIVE" />
                 </intent-filter>
             </receiver>
-            <meta-data android:name="com.alibaba.app.appkey" android:value="$APP_KEY "/> <!-- 请填写你自己的- appKey -->
+            <meta-data android:name="com.alibaba.app.appkey" android:value="$APP_KEY"/> <!-- 请填写你自己的- appKey -->
             <meta-data android:name="com.alibaba.app.appsecret" android:value="$APP_SECRET"/> <!-- 请填写你自己的appSecret -->
         </config-file>
 
